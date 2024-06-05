@@ -1,0 +1,59 @@
+[gd_scene load_steps=8 format=3 uid="uid://by7gg7b6uif0l"]
+
+[ext_resource type="PackedScene" uid="uid://7nies5yyyegg" path="res://scenes/player.tscn" id="1_1bwhs"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_bhwnr"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_lgsrv"]
+sky_material = SubResource("ProceduralSkyMaterial_bhwnr")
+
+[sub_resource type="Environment" id="Environment_0rxvu"]
+background_mode = 2
+sky = SubResource("Sky_lgsrv")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ao5pm"]
+albedo_color = Color(0.680928, 0.355763, 0.301014, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qxmrj"]
+albedo_color = Color(0.535447, 0.819385, 0.956925, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_m0lw6"]
+albedo_color = Color(0.33336, 0.677593, 0.300726, 1)
+
+[node name="Level" type="Node3D"]
+
+[node name="Player" parent="." instance=ExtResource("1_1bwhs")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1.51949, 5.89927e-12)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_0rxvu")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Floor" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.08165e-12, -4, 2.08165e-12)
+use_collision = true
+size = Vector3(30, 8, 5)
+material = SubResource("StandardMaterial3D_ao5pm")
+
+[node name="LaunchPad" type="CSGBox3D" parent="."]
+transform = Transform3D(1.83394, 0, 0, 0, 1, 0, 0, 0, 1.83394, -10, 0.2, 2.08165e-12)
+use_collision = true
+size = Vector3(1, 0.4, 1)
+material = SubResource("StandardMaterial3D_qxmrj")
+
+[node name="LandingPad" type="CSGBox3D" parent="."]
+transform = Transform3D(1.834, 0, 0, 0, 1, 0, 0, 0, 1.834, 10, 0.2, 2.08165e-12)
+use_collision = true
+size = Vector3(1, 0.4, 1)
+material = SubResource("StandardMaterial3D_m0lw6")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, -4.21304e-16, 3.41165e-16, 3.41165e-16, 0.978148, 0.207912, -4.21304e-16, -0.207912, 0.978148, 2.08165e-12, 11, 14.255)
+top_level = true
