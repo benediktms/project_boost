@@ -1,7 +1,8 @@
 [gd_scene load_steps=10 format=3 uid="uid://b8o1r00bv4py8"]
 
 [ext_resource type="PackedScene" uid="uid://7nies5yyyegg" path="res://scenes/player.tscn" id="1_q18hx"]
-[ext_resource type="Script" path="res://src/landing_pad.gd" id="2_pt6py"]
+[ext_resource type="Script" path="res://src/Player.cs" id="2_8q6f2"]
+[ext_resource type="PackedScene" uid="uid://bsimaopeura68" path="res://scenes/landing_pad.tscn" id="3_o7fa0"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_bhwnr"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -25,13 +26,13 @@ albedo_color = Color(0.805691, 0.237765, 0.509343, 1)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qxmrj"]
 albedo_color = Color(0.535447, 0.819385, 0.956925, 1)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_m0lw6"]
-albedo_color = Color(0.33336, 0.677593, 0.300726, 1)
-
 [node name="Level" type="Node3D"]
 
 [node name="Player" parent="." instance=ExtResource("1_q18hx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1.51949, 5.89927e-12)
+script = ExtResource("2_8q6f2")
+_thrust = 1000.0
+_torqueThrust = 200.0
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_0rxvu")
@@ -64,13 +65,8 @@ use_collision = true
 size = Vector3(1, 0.4, 1)
 material = SubResource("StandardMaterial3D_qxmrj")
 
-[node name="LandingPad" type="CSGBox3D" parent="." groups=["Goal"]]
-transform = Transform3D(1.834, 0, 0, 0, 1, 0, 0, 0, 1.834, 10, 0.2, 2.08165e-12)
-use_collision = true
-size = Vector3(1, 0.4, 1)
-material = SubResource("StandardMaterial3D_m0lw6")
-script = ExtResource("2_pt6py")
-file_path = "res://scenes/level_4.tscn"
+[node name="LandingPad" parent="." instance=ExtResource("3_o7fa0")]
+FilePath = "res://scenes/level.tscn"
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, -4.21304e-16, 3.41165e-16, 3.41165e-16, 0.978148, 0.207912, -4.21304e-16, -0.207912, 0.978148, 2.08165e-12, 11, 14.255)

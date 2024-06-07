@@ -1,3 +1,4 @@
+using System;
 using Godot;
 
 namespace project_boost;
@@ -6,6 +7,9 @@ public partial class Player : RigidBody3D
 {
     [Export(PropertyHint.Range, "750.0,3000.0")] private float _thrust = 1000;
     [Export] private float _torqueThrust = 200;
+
+    private bool _isTransitioning = false;
+    private string nextLevelFile;
 
     private Player()
     {
@@ -37,10 +41,13 @@ public partial class Player : RigidBody3D
 
     private void OnBodyEntered(Node node)
     {
+        if (_isTransitioning) return;
+
         var groups = node.GetGroups();
         if (groups.Contains("Goal"))
         {
-            CompleteLevel();
+            LandingPad landingPad = node as LandingPad;
+            CompleteLevel(landingPad.FilePath);
         }
         else if (groups.Contains("Obstacle"))
         {
@@ -51,12 +58,32 @@ public partial class Player : RigidBody3D
     private void CrashSequence()
     {
         GD.Print("Boom");
+        _isTransitioning = true;
+        SetProcess(false);
+        var tween = CreateTween();
+        tween.TweenInterval(1);
+        tween.TweenCallback(new Callable(this, nameof(RestartLevel)));
+        ;
+    }
+
+    private void RestartLevel()
+    {
         GetTree().ReloadCurrentScene();
     }
 
-    private void CompleteLevel()
+    private void CompleteLevel(string nextLevelFile)
     {
+        this.nextLevelFile = nextLevelFile;
         GD.Print("Level complete");
-        GetTree().Quit();
+        _isTransitioning = true;
+        SetProcess(false);
+        var tween = CreateTween();
+        tween.TweenInterval(1);
+        tween.TweenCallback(new Callable(this, nameof(LoadNextLevel)));
+    }
+
+    public void LoadNextLevel()
+    {
+        GetTree().ChangeSceneToFile(nextLevelFile);
     }
 }
