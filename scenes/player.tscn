@@ -18,5 +18,5 @@ mesh = SubResource("CylinderMesh_stx3l")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CylinderShape3D_g8tjg")
 
-[connection signal="body_entered" from="." to="." method="OnBodyEntered"]
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_entered" from="." to="." method="OnBodyEntered"]
