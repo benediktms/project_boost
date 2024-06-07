@@ -5,6 +5,17 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "C#: Launch Project (macOS)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "program": "/Applications/Godot_mono.app/Contents/MacOS/Godot",
+      "cwd": "${workspaceFolder}",
+      "console": "internalConsole",
+      "stopAtEntry": false,
+      "args": ["--path", "${workspaceRoot}"]
+    },
+    {
       "name": "GDScript: Launch Project",
       "type": "godot",
       "request": "launch",
