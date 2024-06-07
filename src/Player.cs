@@ -1,4 +1,3 @@
-using System;
 using Godot;
 
 namespace project_boost;
@@ -8,8 +7,8 @@ public partial class Player : RigidBody3D
     [Export(PropertyHint.Range, "750.0,3000.0")] private float _thrust = 1000;
     [Export] private float _torqueThrust = 200;
 
-    private bool _isTransitioning = false;
-    private string nextLevelFile;
+    private bool _isTransitioning;
+    private string _nextLevelFile;
 
     private Player()
     {
@@ -46,8 +45,8 @@ public partial class Player : RigidBody3D
         var groups = node.GetGroups();
         if (groups.Contains("Goal"))
         {
-            LandingPad landingPad = node as LandingPad;
-            CompleteLevel(landingPad.FilePath);
+            var landingPad = node as LandingPad;
+            CompleteLevel(landingPad?.FilePath);
         }
         else if (groups.Contains("Obstacle"))
         {
@@ -63,7 +62,6 @@ public partial class Player : RigidBody3D
         var tween = CreateTween();
         tween.TweenInterval(1);
         tween.TweenCallback(new Callable(this, nameof(RestartLevel)));
-        ;
     }
 
     private void RestartLevel()
@@ -73,7 +71,7 @@ public partial class Player : RigidBody3D
 
     private void CompleteLevel(string nextLevelFile)
     {
-        this.nextLevelFile = nextLevelFile;
+        _nextLevelFile = nextLevelFile;
         GD.Print("Level complete");
         _isTransitioning = true;
         SetProcess(false);
@@ -84,6 +82,6 @@ public partial class Player : RigidBody3D
 
     public void LoadNextLevel()
     {
-        GetTree().ChangeSceneToFile(nextLevelFile);
+        GetTree().ChangeSceneToFile(_nextLevelFile);
     }
 }
