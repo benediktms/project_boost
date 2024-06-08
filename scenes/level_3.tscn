@@ -66,7 +66,7 @@ size = Vector3(1, 0.4, 1)
 material = SubResource("StandardMaterial3D_qxmrj")
 
 [node name="LandingPad" parent="." instance=ExtResource("3_o7fa0")]
-FilePath = "res://scenes/level.tscn"
+file_path = "res://scenes/level_4.tscn"
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, -4.21304e-16, 3.41165e-16, 3.41165e-16, 0.978148, 0.207912, -4.21304e-16, -0.207912, 0.978148, 2.08165e-12, 11, 14.255)

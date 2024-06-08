@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://bsimaopeura68"]
 
-[ext_resource type="Script" path="res://src/LandingPad.cs" id="1_ey3sr"]
+[ext_resource type="Script" path="res://src/landing_pad.gd" id="1_ey3sr"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_m0lw6"]
 albedo_color = Color(0.33336, 0.677593, 0.300726, 1)
