@@ -4,6 +4,5 @@ namespace project_boost;
 
 public partial class LandingPad : Node
 {
-	[Export(PropertyHint.File, "*.tscn")]
-	public string FilePath { get; set; }
+    [Export(PropertyHint.File, "*.tscn")] public string FilePath { get; set; }
 }

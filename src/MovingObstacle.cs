@@ -14,5 +14,4 @@ public partial class MovingObstacle : AnimatableBody3D
         tween.TweenProperty(this, "GlobalPosition", GlobalPosition + _destination, 2);
         tween.TweenProperty(this, "GlobalPosition", GlobalPosition, 2);
     }
-
 }
