@@ -4,11 +4,15 @@ namespace project_boost;
 
 public partial class Player : RigidBody3D
 {
-    [Export(PropertyHint.Range, "750.0,3000.0")] private float _thrust = 1000;
+    [Export(PropertyHint.Range, "750.0,3000.0")]
+    private float _thrust = 1000;
+
     [Export] private float _torqueThrust = 200;
 
     private bool _isTransitioning;
     private string _nextLevelFile;
+    private AudioStreamPlayer _explosionAudio;
+    private AudioStreamPlayer _stageCompleteAudio;
 
     private Player()
     {
@@ -16,6 +20,13 @@ public partial class Player : RigidBody3D
         AxisLockLinearZ = true;
         AxisLockAngularX = true;
         AxisLockAngularY = true;
+    }
+
+    public override void _Ready()
+    {
+        base._Ready();
+        _explosionAudio = GetNode<AudioStreamPlayer>("ExplosionAudio");
+        _stageCompleteAudio = GetNode<AudioStreamPlayer>("StageCompleteAudio");
     }
 
     public override void _Process(double delta)
@@ -29,12 +40,12 @@ public partial class Player : RigidBody3D
 
         if (Input.IsActionPressed("rotate_left"))
         {
-            ApplyTorque(new(0, 0, (float)delta * _torqueThrust));
+            ApplyTorque(new Vector3(0, 0, (float)delta * _torqueThrust));
         }
 
         if (Input.IsActionPressed("rotate_right"))
         {
-            ApplyTorque(new(0, 0, (float)delta * -_torqueThrust));
+            ApplyTorque(new Vector3(0, 0, (float)delta * -_torqueThrust));
         }
     }
 
@@ -57,10 +68,11 @@ public partial class Player : RigidBody3D
     private void CrashSequence()
     {
         GD.Print("Boom");
+        _explosionAudio.Play();
         _isTransitioning = true;
         SetProcess(false);
         var tween = CreateTween();
-        tween.TweenInterval(1);
+        tween.TweenInterval(_explosionAudio.Stream.GetLength());
         tween.TweenCallback(new Callable(this, nameof(RestartLevel)));
     }
 
@@ -73,15 +85,19 @@ public partial class Player : RigidBody3D
     {
         _nextLevelFile = nextLevelFile;
         GD.Print("Level complete");
+        _stageCompleteAudio.Play();
         _isTransitioning = true;
         SetProcess(false);
         var tween = CreateTween();
-        tween.TweenInterval(1);
+        tween.TweenInterval(_stageCompleteAudio.Stream.GetLength());
         tween.TweenCallback(new Callable(this, nameof(LoadNextLevel)));
     }
 
     public void LoadNextLevel()
     {
-        GetTree().ChangeSceneToFile(_nextLevelFile);
+        if (_nextLevelFile != null)
+        {
+            GetTree().ChangeSceneToFile(_nextLevelFile);
+        }
     }
 }

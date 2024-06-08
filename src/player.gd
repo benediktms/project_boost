@@ -3,6 +3,9 @@ extends RigidBody3D
 @export_range(750.0, 3000.0) var thrust: float = 1000.0
 @export var torque_thrust: float = 200.0
 
+@onready var explosion_audio: AudioStreamPlayer = $ExplosionAudio
+@onready var state_complete_audio: AudioStreamPlayer = $StageCompleteAudio
+
 var is_transitioning: bool = false
 
 func _init():
@@ -31,16 +34,18 @@ func _on_body_entered(body: Node) -> void:
 
 func crash_sequence() -> void:
 	print("Boom")
+	explosion_audio.play()
 	is_transitioning = true
 	set_process(false)
 	var tween = create_tween()
-	tween.tween_interval(1)
+	tween.tween_interval(explosion_audio.stream.get_length())
 	tween.tween_callback(get_tree().reload_current_scene)
 
 func complete_level(next_level_file: String) -> void:
 	print("Level complete")
+	state_complete_audio.play()
 	is_transitioning = true
 	set_process(false)
 	var tween = create_tween()
-	tween.tween_interval(1)
+	tween.tween_interval(state_complete_audio.stream.get_length())
 	tween.tween_callback(get_tree().change_scene_to_file.bind(next_level_file))
