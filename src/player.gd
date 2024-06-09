@@ -5,6 +5,7 @@ extends RigidBody3D
 
 @onready var explosion_audio: AudioStreamPlayer = $ExplosionAudio
 @onready var state_complete_audio: AudioStreamPlayer = $StageCompleteAudio
+@onready var rocket_audio: AudioStreamPlayer3D = $RocketAudio
 
 var is_transitioning: bool = false
 
@@ -17,6 +18,10 @@ func _init():
 func _process(delta: float) -> void:
 	if Input.is_action_pressed("boost"):
 		apply_central_force(basis.y * delta * thrust)
+		if rocket_audio.playing == false:
+			rocket_audio.play()
+	else:
+		rocket_audio.stop()
 
 	if Input.is_action_pressed("rotate_left"):
 		apply_torque(Vector3(0.0, 0.0, torque_thrust * delta))
