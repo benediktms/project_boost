@@ -7,6 +7,13 @@ extends RigidBody3D
 @onready var state_complete_audio: AudioStreamPlayer = $StageCompleteAudio
 @onready var rocket_audio: AudioStreamPlayer3D = $RocketAudio
 
+@onready var booster_particles: GPUParticles3D = $BoosterParticles
+@onready var booster_particles_right: GPUParticles3D = $BoosterParticlesRight
+@onready var booster_particles_left: GPUParticles3D = $BoosterParticlesLeft
+
+@onready var explosion_particles: GPUParticles3D = $ExplosionParticles
+@onready var success_particles: GPUParticles3D = $SuccessParticles
+
 var is_transitioning: bool = false
 
 func _init():
@@ -18,16 +25,24 @@ func _init():
 func _process(delta: float) -> void:
 	if Input.is_action_pressed("boost"):
 		apply_central_force(basis.y * delta * thrust)
+		booster_particles.emitting = true
 		if rocket_audio.playing == false:
 			rocket_audio.play()
 	else:
 		rocket_audio.stop()
+		booster_particles.emitting = false
 
 	if Input.is_action_pressed("rotate_left"):
 		apply_torque(Vector3(0.0, 0.0, torque_thrust * delta))
+		booster_particles_right.emitting = true
+	else:
+		booster_particles_right.emitting = false
 
 	if Input.is_action_pressed("rotate_right"):
 		apply_torque(Vector3(0.0, 0.0, -torque_thrust * delta))
+		booster_particles_left.emitting = true
+	else:
+		booster_particles_left.emitting = false
 
 func _on_body_entered(body: Node) -> void:
 	if is_transitioning: return
@@ -40,6 +55,7 @@ func _on_body_entered(body: Node) -> void:
 func crash_sequence() -> void:
 	print("Boom")
 	explosion_audio.play()
+	explosion_particles.emitting = true
 	is_transitioning = true
 	set_process(false)
 	var tween = create_tween()
@@ -49,6 +65,7 @@ func crash_sequence() -> void:
 func complete_level(next_level_file: String) -> void:
 	print("Level complete")
 	state_complete_audio.play()
+	success_particles.emitting = true
 	is_transitioning = true
 	set_process(false)
 	var tween = create_tween()
